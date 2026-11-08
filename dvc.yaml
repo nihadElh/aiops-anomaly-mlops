@@ -1,0 +1,47 @@
+stages:
+  prepare:
+    cmd: python -m aiops.data
+    deps:
+      - src/aiops/data.py
+      - src/aiops/validate.py
+      - src/aiops/config.py
+      - data/raw/preprocessed/Event_occurrence_matrix.csv
+      - data/raw/preprocessed/anomaly_label.csv
+    params:
+      - seed
+      - data
+      - split
+    outs:
+      - data/processed
+
+  train:
+    cmd: python -m aiops.train
+    deps:
+      - src/aiops/train.py
+      - src/aiops/metrics.py
+      - src/aiops/validate.py
+      - src/aiops/config.py
+      - data/processed
+    params:
+      - seed
+      - data.feature_regex
+      - models
+    outs:
+      - artifacts/models
+      - artifacts/best_model.joblib
+    metrics:
+      - artifacts/val_metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python -m aiops.evaluate
+    deps:
+      - src/aiops/evaluate.py
+      - src/aiops/metrics.py
+      - src/aiops/config.py
+      - artifacts/models
+      - artifacts/val_metrics.json
+      - data/processed
+    metrics:
+      - artifacts/test_metrics.json:
+          cache: false

@@ -1,0 +1,49 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m aiops.data
+    deps:
+    - path: data/raw/preprocessed/Event_occurrence_matrix.csv
+      hash: md5
+      md5: 2317193b0588840b686a989f7a58c095
+      size: 53099247
+    - path: data/raw/preprocessed/anomaly_label.csv
+      hash: md5
+      md5: 464df04e2597a0ded1a6ca492565a188
+      size: 18637554
+    - path: src/aiops/config.py
+      hash: md5
+      md5: 02f0c47d6eeb8df22e95d6902a8e3788
+      size: 176
+    - path: src/aiops/data.py
+      hash: md5
+      md5: 515f1179ea85f6f75df6793acbb767c4
+      size: 5118
+    - path: src/aiops/validate.py
+      hash: md5
+      md5: 25687e4e629efe61bf8c0a6645c112aa
+      size: 1705
+    params:
+      params.yaml:
+        data:
+          raw_path: data/raw/preprocessed/Event_occurrence_matrix.csv
+          labels_path: data/raw/preprocessed/anomaly_label.csv
+          processed_dir: data/processed
+          id_col: BlockId
+          label_col: Label
+          feature_regex: ^E\d+$
+          positive_label: Anomaly
+          allowed_labels:
+          - Normal
+          - Anomaly
+        seed: 42
+        split:
+          train_frac: 0.7
+          val_frac: 0.15
+          strategy: stratified_random_by_block
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 952a3dad3244bd70ed79738bfa4957a5.dir
+      size: 11717064
+      nfiles: 4

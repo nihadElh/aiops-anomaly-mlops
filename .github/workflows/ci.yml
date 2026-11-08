@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Installation
+        run: pip install -e ".[dev]"
+      - name: Lint (gate Code)
+        run: ruff check src tests scripts
+      - name: Tests (données, split, modèle, gate, monitoring, API)
+        run: pytest -q
+      - name: Pipeline complet sur données synthétiques (gate Modèle)
+        run: python scripts/run_sample_pipeline.py
+      - name: Audit des dépendances (gate Sécurité)
+        # Non bloquant au départ : examiner les résultats, puis retirer "|| true" quand tout est traité.
+        run: pip-audit || true

@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Environnement
+.env
+.env.*
+!.env.example
+
+# HDFS datasets: managed by DVC
+/data/raw/preprocessed/*.csv
+
+# Données préparées
+/data/processed/
+
+# Modèles et artefacts
+/artifacts/
+
+# MLflow local
+/mlruns/
+mlflow.db
+*.db
+
+# Logs
+*.log

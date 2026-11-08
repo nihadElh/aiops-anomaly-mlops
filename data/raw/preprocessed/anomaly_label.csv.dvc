@@ -1,0 +1,5 @@
+outs:
+- md5: 464df04e2597a0ded1a6ca492565a188
+  size: 18637554
+  hash: md5
+  path: anomaly_label.csv

@@ -1,0 +1,37 @@
+seed: 42
+
+data:
+  raw_path: data/raw/preprocessed/Event_occurrence_matrix.csv
+  labels_path: data/raw/preprocessed/anomaly_label.csv
+  processed_dir: data/processed
+  id_col: BlockId
+  label_col: Label
+  feature_regex: '^E\d+$'
+  positive_label: Anomaly
+  allowed_labels: [Normal, Anomaly]
+
+split:
+  train_frac: 0.70
+  val_frac: 0.15
+  strategy: stratified_random_by_block
+
+models:
+  logreg:
+    C: 1.0
+    class_weight: balanced
+    max_iter: 1000
+  gbm:
+    max_iter: 200
+    learning_rate: 0.1
+    max_depth: 4
+    class_weight: balanced
+
+quality_gate:
+  baseline: logreg
+  min_pr_auc_gain: 0.0
+  min_recall: 0.50
+  min_precision: 0.50
+
+monitoring:
+  psi_warning: 0.10
+  psi_alert: 0.25
